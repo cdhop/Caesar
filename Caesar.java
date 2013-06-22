@@ -38,7 +38,15 @@ public class Caesar
 
 	public String decrypt(String cypher_text)
 	{
-		String message = null;
+		String message = "";
+		char[] ct_array = cypher_text.toCharArray();
+		
+		for(int i = 0; i < ct_array.length;i++)
+		{
+			int shift_index = (getCharSetIndex(ct_array[i]) - char_shift);
+			if(shift_index < 0) shift_index = shift_index + char_set.length;
+			message = message + char_set[shift_index];
+		}
 
 		return message;
 	}
@@ -95,9 +103,27 @@ public class Caesar
 	
 	public static void main(String args[])
 	{
-		String message = "this is a test";		
-
-		Caesar c = new Caesar(5);	
-		System.out.println(c.encrypt(message));
+		if(args.length == 3)
+		{
+			Caesar c  = new Caesar(Integer.parseInt(args[1]));
+			
+			if(args[0].equals("-e"))
+			{
+				System.out.println(c.encrypt(args[2]));
+			}
+			else if(args[0].equals("-d"))
+			{
+				System.out.println(c.decrypt(args[2]));
+			}
+			else
+			{
+				System.out.println("Test");
+				System.out.println("Usage: java -jar Caesar.jar -e|-d shift message");
+			}
+		}
+		else
+		{
+			System.out.println("Usage: java -jar Caesar.jar -e|-d shift message");
+		}
 	}
 }
