@@ -2,8 +2,7 @@ public class Caesar
 {
 	char[] char_set = {'A','B','C','D','E','F','G','H','I','J',
 			'K','L','M','N','O','P','Q','R','S','T','U',
-			'V','W','X','Y','Z','0','1','2','3','4','5',
-			'6','7','8','9'}; 
+			'V','W','X','Y','Z'}; 
 	
 	int char_shift;
 	
@@ -23,14 +22,21 @@ public class Caesar
 	
 		// Prepare the message for encryption
 		message = message.toUpperCase();
-		message = cleanString(message);
+		//message = cleanString(message);
 
 		char[] msg_array = message.toCharArray();
 
 		for(int i=0; i < msg_array.length;i++)
 		{
-			int shift_index = (getCharSetIndex(msg_array[i]) + char_shift)%char_set.length;
-			cypher_text = cypher_text + char_set[shift_index];
+			if(contains(char_set,msg_array[i]))
+			{
+				int shift_index = (getCharSetIndex(msg_array[i]) + char_shift)%char_set.length;
+				cypher_text = cypher_text + char_set[shift_index];
+			}
+			else
+			{
+				cypher_text = cypher_text + msg_array[i];
+			}
 		}
 
 		return cypher_text;
@@ -38,16 +44,25 @@ public class Caesar
 
 	public String decrypt(String cypher_text)
 	{
+		cypher_text = cypher_text.toUpperCase();
 		String message = "";
 		char[] ct_array = cypher_text.toCharArray();
 		
 		for(int i = 0; i < ct_array.length;i++)
 		{
-			int shift_index = (getCharSetIndex(ct_array[i]) - char_shift);
-			if(shift_index < 0) shift_index = shift_index + char_set.length;
-			message = message + char_set[shift_index];
+			if(contains(char_set,ct_array[i]))
+			{
+				int shift_index = (getCharSetIndex(ct_array[i]) - char_shift);
+				if(shift_index < 0) shift_index = shift_index + char_set.length;
+				message = message + char_set[shift_index];
+			}
+			else
+			{
+				message = message + ct_array[i];
+			}
 		}
 
+		message = message.toLowerCase();
 		return message;
 	}
 	
